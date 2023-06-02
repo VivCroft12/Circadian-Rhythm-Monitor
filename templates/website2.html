@@ -1,0 +1,274 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<link rel="stylesheet" href="https://www.w3schools.com/w3css/4/w3.css">
+<link rel="stylesheet" href="https://www.w3schools.com/lib/w3-theme-black.css">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+<title>Rhythm Monitor Data Dashboard</title>
+
+<style>
+
+  p {
+    font-size: medium;
+  }
+
+  table {
+    font-family: arial, sans-serif;
+    border-collapse: collapse;
+    width: 50%;
+  }
+
+  td, th {
+    border: 1px solid #dddddd;
+    font-size: large;
+    text-align: left;
+    padding: 8px;
+  }
+
+  tr:nth-child(even) {
+    background-color: #dddddd;
+  }
+
+</style>
+
+<script type="text/javascript" src="http://code.jquery.com/jquery-1.8.0.min.js"></script>
+
+<script type="text/javascript">
+function updater() {
+  $.get('/temp', function(data) {
+    $('#EnvironmentTemperatureValue').html(data);  // update page 
+  });
+  $.get('/light', function(data) {
+    $('#lightIntensityValue').html(data);  // update page 
+  });
+  $.get('/lightSleep', function(data) {
+    $('#lightSleepValue').html(data);  // update page 
+  });
+  $.get('/deepSleep', function(data) {
+    $('#deepSleepValue').html(data);  // update page 
+  });
+  $.get('/totalSleep', function(data) {
+    $('#totalSleepValue').html(data);  // update page 
+  });
+  $.get('/BPM', function(data) {
+    $('#heartRateValue').html(data);  // update page 
+  });
+  $.get('/bodyTemp', function(data) {
+    $('#BodyTemperatureValue').html(data);  // update page 
+  });
+  $.get('/humidity', function(data) {
+    $('#HumidityValue').html(data);  // update page 
+  });
+  $.get('/cfi', function(data) {
+    $('#cfi').html(data);  // update page 
+  });
+
+};
+
+setInterval(updater, 10000);  //interval every second
+</script>
+
+</head>
+<body>
+  <header class="w3-container w3-theme w3-padding" id="myHeader">
+    
+    <div class="w3-center">
+    <h1 class="w3-xxxlarge w3-animate-bottom">Rhythm Monitor Dashboard</h1>
+  </header>
+
+  <div class="w3-container">
+    <hr>
+    <div class="w3-center">
+      <h2>Table of live data</h2>
+      <p w3-class="w3-large">The dynamic data gathered by the sensors and updated in the cloud.</p>
+    </div>
+  <div class="w3-responsive w3-card-4">
+  <table class="w3-table w3-striped w3-bordered">
+  <thead>
+  <tr class="w3-theme">
+    <th>Sensor Type</th>
+    <th>Value</th>
+    <th>Unit</th>
+  </tr>
+  </thead>
+  <tbody>
+  <tr>
+    <td>Heart Rate</td>
+    <td id="heartRateValue">Loading...</td>
+    <td>BPM</td>
+  </tr>
+  <tr class="w3-white">
+    <td>Environment Temperature</td>
+    <td id="EnvironmentTemperatureValue">Loading...</td>
+    <td>°C</td>
+  </tr>
+  <tr>
+    <td>Environmental Light Intensity</td>
+    <td id="lightIntensityValue">Loading...</td>
+    <td>lux</td>
+  </tr>
+
+  <tr class="w3-white">
+    <td>Body Temperature</td>
+    <td id="BodyTemperatureValue">Loading...</td>
+    <td>°C</td>
+  </tr>
+  <tr class="w3-white">
+    <td>Humidity</td>
+    <td id="HumidityValue">Loading...</td>
+    <td>%</td>
+  </tr>
+  <tr>
+    <td>Light Sleep</td>
+    <td id="lightSleepValue">Loading...</td>
+    <td>min</td>
+  </tr>
+  <tr>
+    <td>Deep Sleep</td>
+    <td id="deepSleepValue">Loading...</td>
+    <td>min</td>
+  </tr>
+  <tr>
+    <td>Total Sleep</td>
+    <td id="totalSleepValue">Loading...</td>
+    <td>min</td>
+  </tr>
+  </tbody>
+  </table>
+  </div>
+
+<div class="w3-container">
+  <button class="w3-btn w3-xlarge w3-dark-grey w3-hover-light-grey" onclick="move()">Calculate CFI Score</button>
+<div class="w3-light-gray">
+  <div id="myBar" class="w3-center w3-padding w3-theme" style="width:5%">5%</div>
+</div>
+<div id="cfiscore" style = "display: none;">CFI value : <span id="cfi"><span></div>
+</div>
+
+<script>
+function move() {
+  var elem = document.getElementById("myBar");   
+  var width = 5;
+  var id = setInterval(frame, 10);
+  function frame() {
+    if (width == 100) {
+      clearInterval(id);
+    } else {
+      width++; 
+      elem.style.width = width + '%'; 
+      elem.innerHTML = width * 1  + '%';
+    }
+  }
+  const t = document.getElementById("cfiscore");
+  t.style.display = "block";
+}
+</script>
+
+  <div class="w3-quarter">
+    <h2>Variables used</h2>
+    <p>Circadian rhythm in humans plays a vital role in people's healthy lives, but this is affected by the environment and changing lifestyles. <br><br> Dysfunctions of the circadian rhythm may lead to a lot of health issues, including delayed sleep phase disorder, obesity, and many more. The cardiovascular and metabolic processes will also be affected by the circadian disruption. <br><br> The present study aims to develop hardware named “Rhythm Monitor” to monitor different circadian parameters and use them to help people maintain their circadian rhythm for a healthier lifestyle. <br><br> The current research is in the direction of using sensors to monitor a person's circadian function index. The results of our product help individuals by providing better recommendations to help them maintain their circadian rhythm better.</p>
+    <p>We use three different factors to determine CFI. They are Interdaily Stability, Intradaily Variability and Relative Amplitude.</p>
+    </div>
+    
+    <div class="w3-quarter">
+    <div class="w3-card w3-white">
+      <img src="/static/IS.png" alt="IS Formula" style="width:100%">
+      <div class="w3-container">
+      <h3>IS</h3>
+      <h4>Interdaily Stabiliity</h4>
+      <p>This variable refers to the stability of the activity rhythm observed over a set of consecutive days.</p>
+      <p> We can plot the activity status of an individual for each day and observe the variations in the user's activity hence calculating how stable their daily routine is.</p>
+      <p>n: the total number of data recorded (24h * (for example)7 days = 168 data)
+        <br><br>
+        P: the number of data entries recorded per day (in this example, 24 as we calculate hourly)
+        <br><br>
+        x¯h: the mean/average of the data recorded hourly
+        <br><br>
+        x¯:	the mean of the entire dataset
+        <br><br>
+        xi:	the individual data value with position i.
+        <br><br>
+        Range: 0<= IS <= 1</p>
+        <br><br><br><br>
+      </div>
+      </div>
+    </div>
+    
+    <div class="w3-quarter">
+    <div class="w3-card w3-white">
+      <img src="/static/IV.png" alt="IV Formula" style="width:100%">
+      <div class="w3-container">
+      <h3>IV</h3>
+      <h4>Intradaily Variability</h4>
+      <p>The activity of an individual in 24 hours can be plotted to envision the intradaily variability.</p>
+      <p>For an irregular activity (which can pertain to infrequent sleep patterns throughout the day), one can notice fragmentation of the activity rhythm.</p>
+      <p>These fragments will be greater in number for an individual with a high IV value.</p>
+      <p>n: the total number of data recorded (24h * (for example)7 days = 168 data)
+        <br><br>
+        P: the number of data entries recorded per day (in this example, 24 as we calculate hourly)
+        <br><br>
+        x¯h: the mean/average of the data recorded hourly
+        <br><br>
+        x¯:	the mean of the entire dataset
+        <br><br>
+        xi:	the individual data value with position i.
+        <br><br>
+        
+      Range: 0.00<= IV <=2.00
+        <br><br>
+      The IV value is normalized between 0 and 1.</p>
+      </div>
+      </div>
+    </div>
+    
+    <div class="w3-quarter">
+    <div class="w3-card w3-white">
+      <img src="/static/RA.png" alt="RA Formula" style="width:100%">
+      <div class="w3-container">
+      <h3>RA</h3>
+      <h4>Relative Amplitude</h4>
+      <p>This variable refers to the difference between the most active 10 hours (M10) and least active 5 hours (L5) in an average lifespan of 24-hours, divided by their sum.</p>
+      <p>Where, M10: average (maximum values obtained for a consecutive period of 10 hours)</p>
+      <p>L5:	average (minimum values obtained for a consecutive period of 5 hours)</p>
+      <p>Range:	0< = RA <=1</p> 
+      <br><br><br><br><br><br><br><br><br><br><br><br>     
+      </div>
+      </div>
+    </div>
+    
+    </div>
+
+  <div class="w3-row-padding w3-center w3-margin-top">
+    <div class="w3-third">
+      <div class="w3-card w3-container" style="min-height:460px">
+      <h3>Ambient Light Sensor</h3><br>
+      <img src="/static/light.png" style="width:35%" onclick="onClick(this)" class="w3-hover-opacity" alt="A phone">
+      <p>The Luminosity Sensor Breakout is used to measure the intensity of the light in terms of lux.</p>
+      <p>To give a better perspective of the human eye, the sensor coalesces both visible and infrared light.</p>
+      </div>
+    </div>
+    
+    <div class="w3-third">
+      <div class="w3-card w3-container" style="min-height:460px">
+      <h3>Environmental Temperature Sensor</h3><br>
+      <img src="/static/envtemp.jpg" style="width:35%" onclick="onClick(this)" class="w3-hover-opacity" alt="A phone">
+      <p>To measure the environment temperature, we use the temperature sensor that can measure the temperature of minimum -40°C to maximum+85°C.</p>
+      </div>
+    </div>
+    
+    <div class="w3-third">
+      <div class="w3-card w3-container" style="min-height:460px">
+      <h3>Heart Rate Sensor</h3><br>
+      <img src="/static/heartrate.png" style="width:35%" onclick="onClick(this)" class="w3-hover-opacity" alt="A microphone">
+      <p>It comprises a red and infrared LED, photoelectric detectors, and electronic circuits with the capability to block out unwanted light from the environment that is liable to cause interference.</p>
+      <p>Pulse and blood oxygen saturation is measured by using the principle of human tissue causing different light to scatter or absorb differently according to heart rate and the blood vessels' rhythm.</p>
+      </div>
+    </div>
+    </div>
+  <p>
+    CFI incorporates three parameters, IV, IS and RA, from the TAP variable. IV values were inverted and normalized between 0 and 1, with 0 being a noise signal, and 1 a perfect sinusoid. Finally, CFI was calculated as the average of these three parameters. Consequently, CFI oscillates between 0 (absence of circadian rhythmicity) and 1 (a robust circadian rhythm).
+  </p>
+</body>
+</html>
